@@ -36,6 +36,7 @@ namespace RMC
 
     RMC@ Challenge;
     RMS@ Survival;
+    RME@ Endless;
     RMObjective@ Objective;
     RMT@ Together;
 
@@ -43,6 +44,7 @@ namespace RMC
     {
         Challenge,
         Survival,
+        Endless,
         ChallengeChaos,
         SurvivalChaos,
         Objective,
@@ -65,6 +67,7 @@ namespace RMC
     void InitModes() {
         @Challenge = RMC();
         @Survival = RMS();
+        @Endless = RME();
         @Objective = RMObjective();
         @Together = RMT();
     }
@@ -111,6 +114,7 @@ namespace RMC
                     GoalMedalCount = 0;
                     Challenge.BelowMedalCount = 0;
                     Survival.Skips = 0;
+                    Endless.Skips = 0;
                     UI::ShowNotification("\\$080Random Map "+ tostring(RMC::selectedGameMode) + " started!", "Good Luck!");
                     IsInited = true;
                 }
@@ -134,6 +138,8 @@ namespace RMC
                         Challenge.StartTimer();
                     } else if (RMC::selectedGameMode == GameMode::Survival || RMC::selectedGameMode == GameMode::SurvivalChaos){
                         Survival.StartTimer();
+                    } else if (RMC::selectedGameMode == GameMode::Endless){
+                        Endless.StartTimer();
                     } else if (RMC::selectedGameMode == GameMode::Objective){
                         Objective.StartTimer();
                     }

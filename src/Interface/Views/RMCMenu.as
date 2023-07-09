@@ -13,6 +13,12 @@ namespace RMC
                 selectedGameMode = GameMode::Survival;
                 startnew(Start);
             }
+
+            if (UI::GreenButton(Icons::HourglassEnd + " Start Random Map Endless")){
+                selectedGameMode = GameMode::Endless;
+                startnew(Start);
+            }
+
             UI::SetNextItemWidth(100);
             if (UI::BeginCombo("##GoalMedalObjectiveMode", PluginSettings::RMC_GoalMedal)){
                 for (uint i = 0; i < RMC::Medals.Length; i++) {
@@ -162,7 +168,9 @@ namespace RMC
             RMC::GoalMedalCount > 0 ||
             Challenge.BelowMedalCount > 0 ||
             Survival.Skips > 0 ||
-            Survival.SurvivedTime > 0
+            Survival.SurvivedTime > 0 ||
+            Endless.Skips > 0 ||
+            Endless.SurvivedTime > 0
         ) {
             if (!UI::IsOverlayShown()) UI::Dummy(vec2(0, 10));
             UI::Separator();
@@ -179,6 +187,13 @@ namespace RMC
                 Survival.RenderBelowGoalMedal();
                 UI::SetCursorPos(vec2(pos_orig.x, pos_orig.y+60));
                 UI::Text("Survived time: " + RMC::FormatTimer(Survival.SurvivedTime));
+            }
+            else if (selectedGameMode == GameMode::Endless) {
+                Endless.RenderGoalMedal();
+                UI::SetCursorPos(vec2(UI::GetCursorPos().x+50, UI::GetCursorPos().y));
+                Endless.RenderBelowGoalMedal();
+                UI::SetCursorPos(vec2(pos_orig.x, pos_orig.y+60));
+                UI::Text("Survived time: " + RMC::FormatTimer(Endless.SurvivedTime));
             }
             else if (selectedGameMode == GameMode::Objective) {
                 Objective.RenderGoalMedal();
@@ -208,6 +223,7 @@ namespace RMC
     {
         if (selectedGameMode == GameMode::Challenge || selectedGameMode == GameMode::ChallengeChaos) Challenge.Render();
         else if (selectedGameMode == GameMode::Survival || selectedGameMode == GameMode::SurvivalChaos) Survival.Render();
+        else if (selectedGameMode == GameMode::Endless) Endless.Render();
         else if (selectedGameMode == GameMode::Objective) Objective.Render();
         else if (selectedGameMode == GameMode::Together) Together.Render();
     }
@@ -219,6 +235,7 @@ namespace RMC
         UI::PopFont();
         UI::TextWrapped("In the Random Map Challenge, you have to grab the maximum number of author medals in 1 hour.");
         UI::TextWrapped("In the Random Map Survival, you have to grab the maximum number of author medals before the timer reaches 0. You gain 3 minutes per medal won, you can skip but you lose 1 minute of your time limit");
+        UI::TextWrapped("In Random Map Endless you have the maximum number of auther medals without running out of lives. YOu loose a live by resetting a run on a map.");
         if (UI::GreenButton(Icons::ExternalLink + " More informations")) OpenBrowserURL("https://flinkblog.de/RMC/");
     }
 }
